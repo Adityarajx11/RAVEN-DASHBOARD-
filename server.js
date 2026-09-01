@@ -10,6 +10,9 @@ if (!process.env.SESSION_SECRET) {
 
 const app = express();
 
+// Trust Railway's reverse proxy for secure cookies
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(express.json());
 
