@@ -15,6 +15,11 @@ router.get('/login', (req, res) => {
 
   const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}`;
 
+  // DEBUG: Log the redirect URI and Discord auth URL
+  console.log('🔐 OAuth Login initiated');
+  console.log('   redirectUri:', redirectUri);
+  console.log('   discordAuthUrl:', discordAuthUrl);
+
   res.redirect(discordAuthUrl);
 });
 
