@@ -2,6 +2,12 @@ const express = require('express');
 const session = require('express-session');
 require('dotenv').config();
 
+// Validate required environment variables
+if (!process.env.SESSION_SECRET) {
+  console.error('❌ SESSION_SECRET environment variable is required. Set it on Railway and redeploy.');
+  process.exit(1);
+}
+
 const app = express();
 
 // Middleware
@@ -9,7 +15,7 @@ app.use(express.json());
 
 // Session middleware
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-secret-key-change-me',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
