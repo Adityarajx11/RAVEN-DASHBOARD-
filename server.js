@@ -43,11 +43,6 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
-// DEBUG: Temporary endpoint to check environment variables
-app.get('/debug-env', (req, res) => {
-  res.json({ dashboardUrl: process.env.DASHBOARD_URL });
-});
-
 // Auth routes
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
