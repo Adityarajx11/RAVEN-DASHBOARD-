@@ -4,11 +4,12 @@ const requireAuth = require('../middleware/requireAuth');
 
 /**
  * GET /dashboard/servers
- * Protected route - returns user's guilds where they have ADMINISTRATOR permission
+ * Protected route - renders user's guilds where they have ADMINISTRATOR permission
  * Checks for permission bit 0x8 (ADMINISTRATOR)
  */
 router.get('/servers', requireAuth, (req, res) => {
   const guilds = req.session.guilds || [];
+  const user = req.session.user;
 
   // Filter guilds where user has ADMINISTRATOR permission
   // Permission bit 0x8 = ADMINISTRATOR
@@ -19,10 +20,16 @@ router.get('/servers', requireAuth, (req, res) => {
     return hasAdmin;
   });
 
-  res.json({
-    user: req.session.user,
+  // Only pass safe user data to template (no accessToken)
+  const safeUser = {
+    id: user.id,
+    username: user.username,
+    avatar: user.avatar
+  };
+
+  res.render('servers', {
+    user: safeUser,
     adminGuilds: adminGuilds,
-    totalGuilds: guilds.length,
     adminGuildCount: adminGuilds.length
   });
 });

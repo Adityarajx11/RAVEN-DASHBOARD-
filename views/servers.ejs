@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAVEN Dashboard - Server Picker</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: #1a1a1a;
+      border-bottom: 2px solid #8B0000;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid #8B0000;
+      object-fit: cover;
+    }
+
+    .user-info h1 {
+      font-size: 1.25rem;
+      color: #ffffff;
+    }
+
+    .user-info p {
+      font-size: 0.875rem;
+      color: #b0b0b0;
+    }
+
+    .logout-btn {
+      background-color: #8B0000;
+      color: #ffffff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .logout-btn:hover {
+      background-color: #a50000;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      margin-bottom: 2rem;
+      color: #ffffff;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      background-color: #1a1a1a;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+
+    .empty-state p {
+      font-size: 1.125rem;
+      color: #b0b0b0;
+    }
+
+    .servers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .server-card {
+      background-color: #1a1a1a;
+      border: 2px solid #333;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .server-card:hover {
+      border-color: #8B0000;
+      background-color: #242424;
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(139, 0, 0, 0.2);
+    }
+
+    .server-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      object-fit: cover;
+      border: 2px solid #8B0000;
+    }
+
+    .server-placeholder {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #8B0000 0%, #5a0000 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      border: 2px solid #8B0000;
+    }
+
+    .server-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ffffff;
+      word-break: break-word;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid #333;
+      color: #707070;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="<%= user.username %>" class="user-avatar">
+      <div class="user-info">
+        <h1><%= user.username %></h1>
+        <p>Select a server to manage</p>
+      </div>
+    </div>
+    <a href="/auth/logout" class="logout-btn">Logout</a>
+  </header>
+
+  <main>
+    <h2>Your Servers</h2>
+
+    <% if (adminGuildCount === 0) { %>
+      <div class="empty-state">
+        <p>You don't manage any servers with RAVEN yet.</p>
+      </div>
+    <% } else { %>
+      <div class="servers-grid">
+        <% adminGuilds.forEach((guild) => { %>
+          <a href="/dashboard/<%= guild.id %>" class="server-card">
+            <% if (guild.icon) { %>
+              <img src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png" alt="<%= guild.name %>" class="server-icon">
+            <% } else { %>
+              <div class="server-placeholder">🛡️</div>
+            <% } %>
+            <div class="server-name"><%= guild.name %></div>
+          </a>
+        <% }); %>
+      </div>
+    <% } %>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 RAVEN Dashboard. All rights reserved.</p>
+  </footer>
+</body>
+</html>

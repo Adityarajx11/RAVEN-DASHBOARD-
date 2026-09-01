@@ -10,11 +10,16 @@ if (!process.env.SESSION_SECRET) {
 
 const app = express();
 
+// Set EJS as view engine
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+
 // Trust Railway's reverse proxy for secure cookies
 app.set('trust proxy', 1);
 
 // Middleware
 app.use(express.json());
+app.use(express.static('public'));
 
 // Session middleware
 app.use(session({
