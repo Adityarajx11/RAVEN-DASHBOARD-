@@ -1,0 +1,19 @@
+{
+  "name": "raven-dashboard",
+  "version": "1.0.0",
+  "description": "Discord Bot Dashboard for RAVEN",
+  "main": "server.js",
+  "engines": {
+    "node": "18.x"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["discord", "dashboard", "bot"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
