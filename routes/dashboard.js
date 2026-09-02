@@ -35,6 +35,11 @@ router.get('/servers', requireAuth, (req, res) => {
   });
 });
 
+// Temporary test route to validate error page rendering
+router.get('/test-error', (req, res) => {
+  res.status(403).render('error', { statusCode: 403, message: 'This is a test error page' });
+});
+
 /**
  * GET /dashboard/:guildId
  * Protected route - render guild settings page
