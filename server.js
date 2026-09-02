@@ -19,6 +19,7 @@ app.set('trust proxy', 1);
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // Session middleware
