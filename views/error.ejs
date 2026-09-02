@@ -16,104 +16,35 @@
       color: #e0e0e0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       line-height: 1.6;
-    }
-
-    header {
-      background-color: #1a1a1a;
-      border-bottom: 2px solid #8B0000;
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header-left {
+      min-height: 100vh;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      justify-content: center;
     }
 
-    .user-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 2px solid #8B0000;
-      object-fit: cover;
-    }
-
-    .user-info h1 {
-      font-size: 1.25rem;
-      color: #ffffff;
-    }
-
-    .user-info p {
-      font-size: 0.875rem;
-      color: #b0b0b0;
-    }
-
-    .logout-btn {
-      background-color: #8B0000;
-      color: #ffffff;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 500;
-      transition: background-color 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .logout-btn:hover {
-      background-color: #a50000;
-    }
-
-    main {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 3rem 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.95rem;
-    }
-
-    .breadcrumb a {
-      color: #8B0000;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    .breadcrumb a:hover {
-      color: #a50000;
-    }
-
-    .error-card {
+    .error-container {
       background-color: #1a1a1a;
       border: 1px solid #333;
+      border-left: 6px solid #8B0000;
       border-radius: 8px;
-      padding: 2rem;
-      color: #e0e0e0;
+      padding: 3rem 2.5rem;
+      max-width: 900px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
     }
 
     .error-code {
-      font-size: 3.5rem;
-      font-weight: 700;
+      font-size: 4rem;
+      font-weight: 800;
       color: #8B0000;
       margin-bottom: 0.5rem;
     }
 
     .error-message {
-      font-size: 1.125rem;
+      font-size: 1.25rem;
       color: #cfcfcf;
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
     }
 
     .back-link {
@@ -122,48 +53,30 @@
       color: #8B0000;
       text-decoration: none;
       font-weight: 600;
+      border: 1px solid transparent;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      transition: all 0.18s ease;
+      background: transparent;
     }
 
     .back-link:hover {
-      color: #a50000;
+      color: #fff;
+      background: #8B0000;
     }
 
-    footer {
-      text-align: center;
-      padding: 2rem;
-      border-top: 1px solid #333;
-      color: #707070;
-      font-size: 0.875rem;
-      margin-top: 3rem;
+    @media (max-width: 480px) {
+      .error-code { font-size: 3rem; }
+      .error-message { font-size: 1rem; }
+      .error-container { padding: 2rem; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-left">
-      <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="<%= user.username %>" class="user-avatar">
-      <div class="user-info">
-        <h1><%= user.username %></h1>
-        <p>Error</p>
-      </div>
-    </div>
-    <a href="/auth/logout" class="logout-btn">Logout</a>
-  </header>
-
-  <main>
-    <div class="breadcrumb">
-      <a href="/dashboard/servers">← Back to servers</a>
-    </div>
-
-    <div class="error-card">
-      <div class="error-code"><%= statusCode || 'Error' %></div>
-      <div class="error-message"><%= message || 'An unexpected error occurred.' %></div>
-      <a class="back-link" href="/dashboard/servers">← Back to servers</a>
-    </div>
+  <main class="error-container">
+    <div class="error-code"><%= statusCode || 'Error' %></div>
+    <div class="error-message"><%= message || 'An unexpected error occurred.' %></div>
+    <a class="back-link" href="/dashboard/servers">← Back to servers</a>
   </main>
-
-  <footer>
-    <p>&copy; 2026 RAVEN Dashboard. All rights reserved.</p>
-  </footer>
 </body>
 </html>
