@@ -177,6 +177,29 @@
       box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
     }
 
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #e0e0e0;
+      font-size: 0.95rem;
+      transition: border-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .form-group select:focus {
+      outline: none;
+      border-color: #8B0000;
+      box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
+    }
+
+    .form-group select option {
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+    }
+
     .form-group p {
       font-size: 0.875rem;
       color: #999;
@@ -201,20 +224,6 @@
 
     .save-btn:active {
       transform: scale(0.98);
-    }
-
-    .coming-soon {
-      background-color: #1a1a1a;
-      border: 1px dashed #333;
-      border-radius: 8px;
-      padding: 2rem;
-      text-align: center;
-      color: #666;
-    }
-
-    .coming-soon h2 {
-      color: #8B0000;
-      margin-bottom: 0.5rem;
     }
 
     footer {
@@ -255,6 +264,13 @@
       </div>
     <% } %>
 
+    <% if (saved === 'auto-role') { %>
+      <div class="success-banner">
+        <span>✅</span>
+        <span>Auto-role setting saved!</span>
+      </div>
+    <% } %>
+
     <!-- Welcome Message Section -->
     <div class="settings-section">
       <h2>Welcome Message</h2>
@@ -272,10 +288,27 @@
       </form>
     </div>
 
-    <!-- Auto-role Section (Coming Soon) -->
-    <div class="coming-soon">
-      <h2>Auto-role — Coming soon</h2>
-      <p>Configure automatic role assignment for new members</p>
+    <!-- Auto-Role Section -->
+    <div class="settings-section">
+      <h2>Auto-Role</h2>
+      <form method="POST" action="/dashboard/<%= guildId %>/auto-role">
+        <div class="form-group">
+          <label for="autoRoleId">Select Role</label>
+          <select
+            id="autoRoleId"
+            name="autoRoleId"
+          >
+            <option value="none" <% if (!settings.auto_role_id) { %>selected<% } %>>None</option>
+            <% roles.forEach(role => { %>
+              <option value="<%= role.id %>" <% if (settings.auto_role_id === role.id) { %>selected<% } %>>
+                <%= role.name %>
+              </option>
+            <% }); %>
+          </select>
+          <p>The selected role will be automatically assigned to new members when they join your server.</p>
+        </div>
+        <button type="submit" class="save-btn">Save Auto-Role</button>
+      </form>
     </div>
   </main>
 
