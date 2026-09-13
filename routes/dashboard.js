@@ -42,7 +42,7 @@ router.get('/servers', requireAuth, (req, res) => {
  * GET /dashboard/:guildId
  * Protected route - render guild settings page
  * Verifies user has admin access to this guild
- * Fetches guild roles via Discord API
+ * Fetches guild roles and voice channels via Discord API
  */
 router.get('/:guildId', requireAuth, async (req, res) => {
   const { guildId } = req.params;
@@ -69,6 +69,25 @@ router.get('/:guildId', requireAuth, async (req, res) => {
 
   // Fetch current guild settings
   const settings = await getGuildSettings(guildId);
+
+  // Fetch guild voice channels via Discord API
+  let voiceChannels = [];
+  try {
+    const channelsResponse = await axios.get(
+      `${DISCORD_API_BASE}/guilds/${guildId}/channels`,
+      {
+        headers: {
+          Authorization: `Bot ${process.env.BOT_TOKEN}`
+        }
+      }
+    );
+    // Filter for voice channels only (type 2)
+    voiceChannels = (channelsResponse.data || []).filter(ch => ch.type === 2);
+  } catch (error) {
+    console.error('Error fetching guild voice channels:', error.response?.data || error.message);
+    // Continue without voice channels if fetch fails
+    voiceChannels = [];
+  }
 
   // Fetch guild roles via Discord API
   let roles = [];
@@ -100,6 +119,7 @@ router.get('/:guildId', requireAuth, async (req, res) => {
     guildId: guildId,
     guildName: guild.name,
     settings: settings,
+    voiceChannels: voiceChannels,
     roles: roles,
     saved: req.query.saved || null
   });
@@ -162,6 +182,40 @@ router.post('/:guildId/auto-role', requireAuth, async (req, res) => {
 
   // Redirect back with success indicator
   res.redirect(`/dashboard/${guildId}?saved=auto-role`);
+});
+
+/**
+ * POST /dashboard/:guildId/voice-greeting
+ * Protected route - update voice greeting settings
+ * Verifies user has admin access to this guild
+ */
+router.post('/:guildId/voice-greeting', requireAuth, async (req, res) => {
+  const { guildId } = req.params;
+  const { greetingVoiceChannelId, greetingMemberRoleId } = req.body;
+  const guilds = req.session.guilds || [];
+
+  // Find guild in user's guilds and verify ADMINISTRATOR permission
+  const guild = guilds.find((g) => g.id === guildId);
+  if (!guild) {
+    return res.status(403).json({ error: 'Forbidden - Guild not found' });
+  }
+
+  const permissions = BigInt(guild.permissions);
+  const hasAdmin = (permissions & 0x8n) === 0x8n;
+  if (!hasAdmin) {
+    return res.status(403).json({ error: 'Forbidden - No admin permission' });
+  }
+
+  // Update voice greeting settings (or set to null if "none" is selected)
+  const updates = {
+    greeting_voice_channel_id: greetingVoiceChannelId === 'none' ? null : greetingVoiceChannelId,
+    greeting_member_role_id: greetingMemberRoleId === 'none' ? null : greetingMemberRoleId
+  };
+
+  await updateGuildSettings(guildId, updates);
+
+  // Redirect back with success indicator
+  res.redirect(`/dashboard/${guildId}?saved=voice-greeting`);
 });
 
 module.exports = router;
