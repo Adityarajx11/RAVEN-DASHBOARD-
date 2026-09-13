@@ -2,6 +2,9 @@ const express = require('express');
 const session = require('express-session');
 require('dotenv').config();
 
+// Import database initialization
+const { initializeDatabase } = require('./lib/db');
+
 // Validate required environment variables
 if (!process.env.SESSION_SECRET) {
   console.error('❌ SESSION_SECRET environment variable is required. Set it on Railway and redeploy.');
@@ -52,8 +55,12 @@ app.use('/auth', authRoutes);
 const dashboardRoutes = require('./routes/dashboard');
 app.use('/dashboard', dashboardRoutes);
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🐦 RAVEN Dashboard server running on port ${PORT}`);
-});
+// Initialize database and start server
+(async () => {
+  await initializeDatabase();
+  
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`🐦 RAVEN Dashboard server running on port ${PORT}`);
+  });
+})();
