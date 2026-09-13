@@ -271,6 +271,13 @@
       </div>
     <% } %>
 
+    <% if (saved === 'voice-greeting') { %>
+      <div class="success-banner">
+        <span>✅</span>
+        <span>Voice greeting settings saved!</span>
+      </div>
+    <% } %>
+
     <!-- Welcome Message Section -->
     <div class="settings-section">
       <h2>Welcome Message</h2>
@@ -308,6 +315,44 @@
           <p>The selected role will be automatically assigned to new members when they join your server.</p>
         </div>
         <button type="submit" class="save-btn">Save Auto-Role</button>
+      </form>
+    </div>
+
+    <!-- Voice Greeting Section -->
+    <div class="settings-section">
+      <h2>Voice Greeting</h2>
+      <form method="POST" action="/dashboard/<%= guildId %>/voice-greeting">
+        <div class="form-group">
+          <label for="greetingVoiceChannelId">Greeting Voice Channel</label>
+          <select
+            id="greetingVoiceChannelId"
+            name="greetingVoiceChannelId"
+          >
+            <option value="none" <% if (!settings.greeting_voice_channel_id) { %>selected<% } %>>None</option>
+            <% voiceChannels.forEach(channel => { %>
+              <option value="<%= channel.id %>" <% if (settings.greeting_voice_channel_id === channel.id) { %>selected<% } %>>
+                <%= channel.name %>
+              </option>
+            <% }); %>
+          </select>
+          <p>Select a voice channel where voice greetings will be sent to new members.</p>
+        </div>
+        <div class="form-group">
+          <label for="greetingMemberRoleId">Member Role</label>
+          <select
+            id="greetingMemberRoleId"
+            name="greetingMemberRoleId"
+          >
+            <option value="none" <% if (!settings.greeting_member_role_id) { %>selected<% } %>>None</option>
+            <% roles.forEach(role => { %>
+              <option value="<%= role.id %>" <% if (settings.greeting_member_role_id === role.id) { %>selected<% } %>>
+                <%= role.name %>
+              </option>
+            <% }); %>
+          </select>
+          <p>Select a role that will be required to receive voice greetings.</p>
+        </div>
+        <button type="submit" class="save-btn">Save Voice Greeting</button>
       </form>
     </div>
   </main>
